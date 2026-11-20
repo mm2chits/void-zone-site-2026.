@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080711">
+<meta name="description" content="VOID ZONE — интерактивная цифровая зона. Случайные события, испытание реакции и секретная комната.">
+<title>VOID ZONE</title>
+<style>
+:root{--bg:#080711;--panel:rgba(20,17,38,.78);--line:rgba(173,130,255,.24);--violet:#a879ff;--cyan:#62e8ff;--text:#f4efff;--muted:#aaa2c2}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 5%,#25143f 0,#100c20 38%,#080711 75%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
+#stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px clamp(18px,5vw,64px);border-bottom:1px solid var(--line);backdrop-filter:blur(12px);position:sticky;top:0;background:#090714bb;z-index:5}
+.logo{font-weight:900;letter-spacing:.18em}.logo span{color:var(--violet)}button{font:inherit;cursor:pointer;color:var(--text);border:1px solid var(--line);border-radius:12px;background:#211833;padding:11px 16px;transition:.2s}button:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 0 22px #9d69ff40}
+main{width:min(1050px,92%);margin:auto}.hero{text-align:center;padding:clamp(70px,12vh,130px) 0 70px}.eyebrow{color:var(--cyan);letter-spacing:.28em;font-size:.76rem}.hero h1{font-size:clamp(3rem,10vw,7rem);line-height:1;margin:18px 0;background:linear-gradient(90deg,#fff,#c7a4ff 48%,#65eaff);background-clip:text;color:transparent;text-shadow:0 0 45px #a879ff30;letter-spacing:.06em}.hero p{color:var(--muted);max-width:570px;margin:0 auto 28px;line-height:1.7}.portal{width:170px;height:170px;margin:35px auto 0;border-radius:50%;border:2px solid #a879ff;box-shadow:0 0 18px #a879ff, inset 0 0 28px #7c42d6;position:relative;animation:pulse 3s ease-in-out infinite}.portal:before,.portal:after{content:"";position:absolute;inset:13px;border-radius:50%;border:1px solid #62e8ff;transform:rotateX(65deg) rotate(25deg)}.portal:after{inset:27px;transform:rotateX(65deg) rotate(-35deg);border-color:#d4a6ff}@keyframes pulse{50%{transform:scale(1.07);filter:hue-rotate(25deg);box-shadow:0 0 42px #a879ff}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding-bottom:70px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;backdrop-filter:blur(12px);box-shadow:0 15px 50px #0003}.card h2{margin:0 0 9px;font-size:1.2rem}.card p{color:var(--muted);line-height:1.6;min-height:50px}.result{min-height:48px;color:var(--cyan);line-height:1.5;margin:14px 0}.wide{grid-column:1/-1}.secret{display:none;margin-top:14px}.secret.show{display:block}.password{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0d0a18;color:white;margin:8px 0 12px}.gamebox{font-size:2rem;text-align:center;padding:15px;border-radius:12px;background:#100d1d;margin:12px 0}.score{color:var(--cyan)}footer{text-align:center;padding:28px;color:#77718e;border-top:1px solid var(--line);font-size:.85rem}
+@media(max-width:520px){header{padding:16px}.hero{padding-top:70px}.portal{width:135px;height:135px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<header><div class="logo">VOID <span>ZONE</span></div><button id="soundBtn" aria-pressed="false">♫ Звук: выкл.</button></header>
+<main>
+<section class="hero">
+<div class="eyebrow">СИГНАЛ ОБНАРУЖЕН // СИСТЕМА АКТИВНА</div>
+<h1>VOID ZONE</h1>
+<p>Ты нашёл место за пределами обычной сети. Исследуй случайные сигналы, проверь реакцию и попробуй открыть скрытый сектор.</p>
+<button onclick="document.querySelector('#modules').scrollIntoView({behavior:'smooth'})">ВОЙТИ В ЗОНУ ↓</button>
+<div class="portal" aria-label="Светящийся портал"></div>
+</section>
+<section class="grid" id="modules">
+<article class="card"><h2>◈ Случайный сигнал</h2><p>Система перехватит неизвестное сообщение из глубины VOID.</p><button id="eventBtn">Перехватить</button><div class="result" id="eventResult">Ожидание сигнала...</div></article>
+<article class="card"><h2>⚡ Проверка реакции</h2><p>Нажми «Старт», дождись зелёного сигнала и нажми как можно быстрее.</p><button id="startGame">Старт</button><div class="gamebox" id="gameBox">ГОТОВ?</div><div class="result">Лучший результат: <span class="score" id="best">—</span></div></article>
+<article class="card"><h2>⌘ Секретный сектор</h2><p>Некоторые двери открываются только по специальному коду.</p><button id="secretBtn">Ввести код</button><div class="secret" id="secretPanel"><input class="password" id="password" placeholder="Код доступа" autocomplete="off"><button id="unlock">Проверить</button><div class="result" id="secretResult"></div></div></article>
+<article class="card wide"><h2>▣ Статус системы</h2><p id="status">Все основные модули работают. Секретный сектор заблокирован.</p><button id="scanBtn">Сканировать систему</button><div class="result" id="scanResult"></div></article>
+</section>
+</main>
+<footer>VOID ZONE © 2026 · НЕИЗВЕСТНОЕ БЛИЖЕ, ЧЕМ КАЖЕТСЯ</footer>
+<script>
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');let stars=[];
+function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';stars=Array.from({length:Math.min(150,Math.floor(innerWidth/6))},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.7+.3,s:Math.random()*.35+.08}))}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);for(const p of stars){ctx.fillStyle='rgba(205,190,255,.75)';ctx.beginPath();ctx.arc(p.x,p.y,p.r*devicePixelRatio,0,Math.PI*2);ctx.fill();p.y+=p.s*devicePixelRatio;if(p.y>canvas.height){p.y=0;p.x=Math.random()*canvas.width}}requestAnimationFrame(draw)}
+addEventListener('resize',resize);resize();draw();
+const events=['В секторе 04 замечено слабое свечение.','Получен пакет данных без отправителя.','Кто-то оставил метку: «НЕ ОБОРАЧИВАЙСЯ».','Портал изменил частоту. Сканирование завершено.','Найден фрагмент неизвестной карты.','Система сообщает: сегодня ты главный исследователь.'];
+document.getElementById('eventBtn').onclick=()=>document.getElementById('eventResult').textContent=events[Math.floor(Math.random()*events.length)];
+const box=document.getElementById('gameBox'),start=document.getElementById('startGame'),bestEl=document.getElementById('best');let phase='idle',timer,best=null,started=0;
+start.onclick=()=>{clearTimeout(timer);phase='wait';box.textContent='ЖДИ...';start.textContent='Ожидание';timer=setTimeout(()=>{phase='go';started=performance.now();box.textContent='НАЖМИ!';box.style.color='#62ffb4';},1200+Math.random()*3000)};
+box.onclick=()=>{if(phase==='go'){let ms=Math.round(performance.now()-started);box.textContent=ms+' мс';box.style.color='';phase='done';if(best===null||ms<best){best=ms;bestEl.textContent=ms+' мс'}}else if(phase==='wait'){clearTimeout(timer);phase='idle';box.textContent='Слишком рано!';box.style.color='';} };
+document.getElementById('secretBtn').onclick=()=>document.getElementById('secretPanel').classList.toggle('show');
+document.getElementById('unlock').onclick=()=>{let ok=document.getElementById('password').value.trim().toUpperCase()==='VOID-7';document.getElementById('secretResult').textContent=ok?'ДОСТУП РАЗРЕШЁН. Добро пожаловать в скрытый сектор.':'ДОСТУП ОТКЛОНЁН. Код не подходит.';if(ok)document.getElementById('status').textContent='Секретный сектор открыт. Система приветствует исследователя.'};
+document.getElementById('scanBtn').onclick=()=>{document.getElementById('scanResult').textContent='Сканирование завершено: 4 модуля активны · 0 критических ошибок · сигнал стабилен.'};
+let audio=null,osc=null,gain=null;document.getElementById('soundBtn').onclick=()=>{let b=document.getElementById('soundBtn');if(!audio){audio=new (window.AudioContext||window.webkitAudioContext)();osc=audio.createOscillator();gain=audio.createGain();osc.type='sine';osc.frequency.value=110;gain.gain.value=0;osc.connect(gain);gain.connect(audio.destination);osc.start()}if(audio.state==='suspended')audio.resume();let on=b.getAttribute('aria-pressed')!=='true';gain.gain.setTargetAtTime(on?.025:0,audio.currentTime,.15);b.setAttribute('aria-pressed',String(on));b.textContent='♫ Звук: '+(on?'вкл.':'выкл.')};
+</script>
+</body>
+</html>
